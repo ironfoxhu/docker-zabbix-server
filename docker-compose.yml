@@ -1,0 +1,32 @@
+version: '2'
+services:
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-mysql
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    env_file: ".env"
+    links:
+      - mysql-server
+      - zabbix-server
+    ports:
+      - 80:80
+
+  zabbix-server:
+    image: zabbix/zabbix-server-mysql
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    env_file: ".env"
+    links:
+      - mysql-server
+    depends_on:
+      - mysql-server
+    ports:
+      - 10051:10051
+
+  mysql-server:
+    image: mysql:5.7
+    command: [mysqld, --character-set-server=utf8, --collation-server=utf8_bin]
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${VOLUMES_ROOT_PATH}/mysql:/var/lib/mysql
+    env_file: ".env"
