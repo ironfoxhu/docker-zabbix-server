@@ -10,6 +10,7 @@ services:
       - zabbix-server
     ports:
       - 80:80
+    restart: unless-stopped
 
   zabbix-server:
     image: zabbix/zabbix-server-mysql
@@ -22,6 +23,7 @@ services:
       - mysql-server
     ports:
       - 10051:10051
+    restart: unless-stopped
 
   mysql-server:
     image: mysql:5.7
@@ -30,3 +32,4 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${VOLUMES_ROOT_PATH}/mysql:/var/lib/mysql
     env_file: ".env"
+    restart: unless-stopped
